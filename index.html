@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yathin — Overview</title>
+  <meta name="description" content="Personal overview and schedule for CSE Semester 3.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Main Application Container -->
+  <div id="app" class="app-container">
+    
+    <!-- Top Bar -->
+    <header class="cockpit-bar" id="topBar">
+      <div class="brand-section">
+        <h1 class="brand-title">Yathin</h1>
+        <span class="brand-tag">CSE Semester 3</span>
+      </div>
+
+      <!-- Live Phase & Actions -->
+      <div class="cockpit-metrics">
+        <span class="rhythm-indicator" id="rhythmStatus">Loading schedule...</span>
+
+        <div class="header-actions">
+          <button class="btn btn-primary" id="openCaptureBtn" title="Press 'C' to add a new task">
+            <span>New Task</span>
+            <kbd class="shortcut-badge">C</kbd>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Segmented Navigation Bar -->
+    <nav class="nav-bar" id="mainNav" aria-label="Main Navigation">
+      <div class="segmented-control" role="tablist">
+        <button class="segment-btn active" role="tab" aria-selected="true" data-view="focus">
+          <span>Focus</span>
+          <span class="segment-badge" id="focusBadge">0</span>
+        </button>
+        <button class="segment-btn" role="tab" aria-selected="false" data-view="inbox">
+          <span>Inbox</span>
+          <span class="segment-badge" id="inboxBadge">0</span>
+        </button>
+        <button class="segment-btn" role="tab" aria-selected="false" data-view="academics">
+          <span>Academics</span>
+        </button>
+        <button class="segment-btn" role="tab" aria-selected="false" data-view="cr">
+          <span>Representative</span>
+          <span class="segment-badge" id="crBadge">0</span>
+        </button>
+        <button class="segment-btn" role="tab" aria-selected="false" data-view="business">
+          <span>Projects & Business</span>
+        </button>
+        <button class="segment-btn" role="tab" aria-selected="false" data-view="schedule">
+          <span>Schedule</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- View Container -->
+    <main class="view-content" id="viewContainer" role="main">
+      <!-- Dynamic view contents render here -->
+    </main>
+  </div>
+
+  <!-- Task Capture Sheet (macOS Modal Style) -->
+  <div class="modal-overlay hidden" id="captureModal" role="dialog" aria-modal="true" aria-labelledby="captureSheetTitle">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h2 class="modal-title" id="captureSheetTitle">New Task</h2>
+        <button class="modal-close-btn" id="closeCaptureBtn" aria-label="Close dialog">✕</button>
+      </div>
+
+      <form id="captureForm" class="form-body">
+        <div class="form-field">
+          <label for="taskTitleInput">Task Description</label>
+          <input 
+            type="text" 
+            id="taskTitleInput" 
+            class="input-field" 
+            placeholder="e.g. Submit Operating Systems lab observation" 
+            autocomplete="off" 
+            required
+            autofocus
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="prioritySelect">Priority</label>
+            <select id="prioritySelect" class="select-field">
+              <option value="P1">Critical (P1)</option>
+              <option value="P2" selected>High (P2)</option>
+              <option value="P3">Medium (P3)</option>
+              <option value="P4">Low (P4)</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="areaSelect">Category</label>
+            <select id="areaSelect" class="select-field">
+              <option value="College" selected>Academics</option>
+              <option value="CR">Class Representative</option>
+              <option value="Business">Business</option>
+              <option value="Content">Media & Content</option>
+              <option value="Personal">Personal & Social</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="dueDateSelect">Due Date</label>
+            <select id="dueDateSelect" class="select-field">
+              <option value="today">Today</option>
+              <option value="tomorrow">Tomorrow</option>
+              <option value="weekend">This Weekend</option>
+              <option value="nextweek">Next Week</option>
+              <option value="custom">Specific Date...</option>
+              <option value="none">No Due Date</option>
+            </select>
+            <input type="date" id="customDueDate" class="input-field hidden" style="margin-top: 6px;">
+          </div>
+
+          <div class="form-field">
+            <label for="effortSelect">Estimated Effort</label>
+            <select id="effortSelect" class="select-field">
+              <option value="Under 15m">Under 15 minutes</option>
+              <option value="Under 1h" selected>Under 1 hour</option>
+              <option value="1 to 3h">1 to 3 hours</option>
+              <option value="3h+">3 hours or more</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="destinationSelect">Destination</label>
+          <select id="destinationSelect" class="select-field">
+            <option value="Next">Add to Focus</option>
+            <option value="Inbox">Save in Inbox</option>
+          </select>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelCaptureBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveTaskBtn">Add Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- WhatsApp Notice Sheet -->
+  <div class="modal-overlay hidden" id="announcementModal" role="dialog" aria-modal="true" aria-labelledby="announcementSheetTitle">
+    <div class="modal-sheet" style="max-width: 680px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="announcementSheetTitle">Class Notice Formatter</h2>
+        <button class="modal-close-btn" id="closeAnnouncementBtn" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div class="form-body">
+        <div class="form-field">
+          <label for="announcementTopic">Subject or Topic</label>
+          <input type="text" id="announcementTopic" class="input-field" placeholder="e.g. Data Structures Lab Record Submission">
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="announcementSource">Faculty / Source</label>
+            <select id="announcementSource" class="select-field">
+              <option value="Dr. Padma Priya P (Maths III)">Dr. Padma Priya P (Mathematics III)</option>
+              <option value="Manasvi J. Maasthi (Data Structures)">Manasvi J. Maasthi (Data Structures)</option>
+              <option value="Aishwarya T (Operating System)">Aishwarya T (Operating System)</option>
+              <option value="R. Eswin Priya Angel (Computer Org)">R. Eswin Priya Angel (Computer Organization)</option>
+              <option value="Apoorva M. S (Embedded IoT)">Apoorva M. S (Embedded IoT Lab)</option>
+              <option value="Dr. Paramesha K (OOP Java)">Dr. Paramesha K (Java OOP)</option>
+              <option value="Manjunatha G. B (Human Values)">Manjunatha G. B (Universal Human Values)</option>
+              <option value="CSE Department Office">CSE Department Office</option>
+              <option value="Class Representative (Yathin)">Class Representative</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="announcementDeadline">Deadline (Optional)</label>
+            <input type="text" id="announcementDeadline" class="input-field" placeholder="e.g. Tomorrow by 11:30 AM">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="announcementRawNotes">Details and Instructions</label>
+          <textarea id="announcementRawNotes" class="textarea-field" rows="3" placeholder="Enter instructions or submission requirements..."></textarea>
+        </div>
+
+        <div class="form-field">
+          <label>Preview</label>
+          <div id="whatsappPreviewBox" style="background: var(--system-surface-secondary); border: 1px solid var(--system-separator); border-radius: 8px; padding: 12px; font-family: var(--font-mono); font-size: 13px; line-height: 1.5; white-space: pre-wrap; color: var(--system-label);"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelAnnouncementBtn">Close</button>
+        <button type="button" class="btn btn-primary" id="copyWhatsAppBtn">Copy Notice</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Application Logic -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
